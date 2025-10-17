@@ -4,7 +4,7 @@ import { assets, cityList } from "../assets/assets";
 const Hero = () => {
   const [pickupLocation, setPickupLocation] = useState("");
   return (
-    <div className="h-screen flex flex-col items-center justify-center gap-14 bg-light text-center">
+    <div className="h-screen flex flex-col items-center justify-center gap-14 bg-light text-center ">
       <h1 className="text-4xl md:text-5xl font-semibold">
         Luxury cars on Rent
       </h1>
@@ -58,18 +58,17 @@ const Hero = () => {
             </label>
           </div>
           <button className="flex items-center justify-center gap-1 px-9 py-3 max-sm:mt-4 bg-primary hover:bg-primary-dull text-white rounded-full cursor-pointer">
-          <img
-            src={assets.search_icon}
-            alt="search"
-            className="brightness-300"
-          />
-          Search
-        </button>
+            <img
+              src={assets.search_icon}
+              alt="search"
+              className="brightness-300"
+            />
+            Search
+          </button>
         </div>
-        
       </form>
 
-      <img src={assets.main_car} className="max-h-74"/>
+      <img src={assets.main_car} className="max-h-74" />
     </div>
   );
 };

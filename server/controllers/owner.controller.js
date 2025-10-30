@@ -60,7 +60,7 @@ export const getOwnerCars = async (req, res) => {
   try {
     const { _id } = req.user;
     const cars = await Car.find({ owner: _id });
-    return res.status(200).json({ success: true, cars });
+    return res.status(200).json({ success: true, message: "Cars List", cars });
   } catch (error) {
     return res.status(500).json({
       success: false,

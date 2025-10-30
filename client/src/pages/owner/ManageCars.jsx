@@ -1,17 +1,63 @@
 import React, { useEffect, useState } from "react";
 import { assets, dummyCarData } from "../../assets/assets";
 import Title from "../../components/Title";
+import { useAppContext } from "../../Context/AppContext";
+import toast from "react-hot-toast";
 
 const ManageCars = () => {
+  const { isOwner, axios } = useAppContext();
+
   const [cars, setCars] = useState([]);
 
   const fetchOwnersCars = async () => {
-    setCars(dummyCarData);
+    try {
+      const { data } = await axios.get("/api/owner/cars");
+      if (data.success) {
+        toast.success("Total Cars List: " + data.cars.length);
+        setCars(data.cars);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const toggleAvilability = async (carId) => {
+    try {
+      const { data } = await axios.post("/api/owner/toggle-car", { carId });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnersCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const deleteCar = async (carId) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this car?"
+      );
+      if (!confirm) return null;
+      const { data } = await axios.post("/api/owner/delete-car", { carId });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnersCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchOwnersCars();
-  }, []);
+    isOwner && fetchOwnersCars();
+  }, [isOwner]);
   return (
     <div className="px-4 pt-10 md:px-10 w-full">
       <Title
@@ -69,6 +115,7 @@ const ManageCars = () => {
                 </td>
                 <td className="flex items-center p-3">
                   <img
+                    onClick={() => toggleAvilability(car._id)}
                     src={
                       car.isAvaliable ? assets.eye_close_icon : assets.eye_icon
                     }
@@ -77,6 +124,7 @@ const ManageCars = () => {
                   />
 
                   <img
+                    onClick={() => deleteCar(car._id)}
                     src={assets.delete_icon}
                     alt=""
                     className="cursor-pointer"

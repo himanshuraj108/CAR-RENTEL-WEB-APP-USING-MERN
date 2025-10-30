@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { response } from "express";
 import jwt from "jsonwebtoken";
+import Car from "../models/car.model.js";
 
 const generateToken = (userId) => {
   const payload = userId;
@@ -43,7 +44,7 @@ export const registerUser = async (req, res) => {
 
     return res.status(200).json({
       token,
-      success: false,
+      success: true,
       message: "Register Successful",
     });
   } catch (error) {
@@ -103,6 +104,18 @@ export const getUserData = async (req, res) => {
       success: true,
       user,
     });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getCars = async (req, res) => {
+  try {
+    const cars = await Car.find({ isAvaliable: true });
+    return res.status(200).json({ success: true, cars });
   } catch (error) {
     return res.status(500).json({
       success: false,

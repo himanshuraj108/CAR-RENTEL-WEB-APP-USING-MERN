@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { assets, dummyDashboardData } from "../../assets/assets";
 import Title from "../../components/owner/Title";
+import { useAppContext } from "../../Context/AppContext";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
+  const { axios, isOwner, currency } = useAppContext();
+
   const [data, setData] = useState({
     totalCars: 0,
     totalBookings: 0,
@@ -31,9 +35,24 @@ const Dashboard = () => {
     },
   ];
 
+  const fetchDashboardData = async () => {
+    try {
+      const { data } = await axios.get("/api/owner/dashboard");
+      if (data.success) {
+        setData(data.dashboardData);
+      } else {
+        toast.error(error.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
-    setData(dummyDashboardData);
-  }, []);
+    if (isOwner) {
+      fetchDashboardData();
+    }
+  }, [isOwner]);
 
   return (
     <div className="px-4 pt-10 md:px-10 flex-1">
@@ -84,7 +103,13 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
-              <div className={`flex items-center gap-2 font-medium border w-45 justify-center py-4 px-2 rounded-lg border-borderColor ${booking.status==='confirmed'?'hover:border-green-600 hover:bg-green-200/10':'hover:border-red-600 hover:bg-red-200/10'}`}>
+              <div
+                className={`flex items-center gap-2 font-medium border w-45 justify-center py-4 px-2 rounded-lg border-borderColor ${
+                  booking.status === "confirmed"
+                    ? "hover:border-green-600 hover:bg-green-200/10"
+                    : "hover:border-red-600 hover:bg-red-200/10"
+                }`}
+              >
                 <p
                   className={`text-sm  font-semibold ${
                     booking.status === "pending"

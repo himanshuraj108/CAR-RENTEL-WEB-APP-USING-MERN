@@ -43,15 +43,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-    setIsOwner(false);
-    axios.defaults.headers.common["Authorization"] = "";
-    toast.success("You have been logged out ");
-  };
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     setToken(token);
@@ -64,6 +55,15 @@ export const AppProvider = ({ children }) => {
       fetchUser();
     }
   }, [token]);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    setIsOwner(false);
+    axios.defaults.headers.common["Authorization"] = "";
+    toast.success("You have been logged out ");
+  };
 
   const value = {
     navigate,
